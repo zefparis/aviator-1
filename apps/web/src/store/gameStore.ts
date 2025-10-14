@@ -25,7 +25,7 @@ export interface GameState {
   // Actions
   setStatus: (status: GameStatus) => void;
   setMultiplier: (multiplier: number) => void;
-  setCrashPoint: (crashPoint: number) => void;
+  setCrashPoint: (crashPoint: number | null) => void;
   setRoundId: (roundId: string) => void;
   setBalance: (balance: number) => void;
   setCurrentBet: (bet: number) => void;
