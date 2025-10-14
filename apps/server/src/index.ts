@@ -27,16 +27,45 @@ const io = new Server(httpServer, {
   transports: ['websocket', 'polling'],
 });
 
-// Initialize game engine
-const gameEngine = new GameEngine(io);
+// Initialize game engine (delayed to allow DB connection)
+let gameEngine: GameEngine | null = null;
 
-// Health check
+// Start game engine after DB is ready
+setTimeout(async () => {
+  try {
+    await prisma.$connect();
+    console.log('✅ Database connected');
+    gameEngine = new GameEngine(io);
+  } catch (error) {
+    console.error('❌ Database connection failed:', error);
+    console.log('⚠️  Server running without game engine');
+  }
+}, 1000);
+
+// Health check (simple, no DB dependency)
 app.get('/health', (req, res) => {
-  res.json({ 
+  res.status(200).json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    activeConnections: io.engine.clientsCount,
+    service: 'aviator-server',
   });
+});
+
+// Readiness check (with DB)
+app.get('/ready', async (req, res) => {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    res.status(200).json({ 
+      status: 'ready', 
+      timestamp: new Date().toISOString(),
+      activeConnections: io.engine.clientsCount,
+    });
+  } catch (error) {
+    res.status(503).json({ 
+      status: 'not ready',
+      error: 'Database connection failed',
+    });
+  }
 });
 
 // API Routes
@@ -62,11 +91,16 @@ io.on('connection', (socket) => {
   console.log(`✅ Client connected: ${socket.id}`);
 
   // Send current game state
-  socket.emit('game:state', gameEngine.getCurrentState());
+  if (gameEngine) {
+    socket.emit('game:state', gameEngine.getCurrentState());
+  }
 
   // Handle bet placement
   socket.on('bet:place', async (data: { amount: number }) => {
     try {
+      if (!gameEngine) {
+        throw new Error('Game engine not ready');
+      }
       await gameEngine.placeBet(socket.id, data.amount);
     } catch (error) {
       socket.emit('error', { message: (error as Error).message });
@@ -76,6 +110,9 @@ io.on('connection', (socket) => {
   // Handle cashout
   socket.on('bet:cashout', async () => {
     try {
+      if (!gameEngine) {
+        throw new Error('Game engine not ready');
+      }
       await gameEngine.cashout(socket.id);
     } catch (error) {
       socket.emit('error', { message: (error as Error).message });
@@ -84,7 +121,9 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log(`❌ Client disconnected: ${socket.id}`);
-    gameEngine.removePlayer(socket.id);
+    if (gameEngine) {
+      gameEngine.removePlayer(socket.id);
+    }
   });
 });
 
