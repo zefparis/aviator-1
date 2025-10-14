@@ -6,9 +6,9 @@ cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
 cmds = [
-  "cd apps/web && pnpm prisma generate",
-  "pnpm run build"
+  "cd apps/server && pnpm prisma generate",
+  "cd apps/server && pnpm run build"
 ]
 
 [start]
-cmd = "pnpm run start"
+cmd = "cd apps/server && pnpm start"
