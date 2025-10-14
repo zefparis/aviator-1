@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "pnpm --filter @aviator/server prisma generate && pnpm --filter @aviator/server build",
+    "build": "./build.sh",
     "start": "cd apps/server && pnpm start",
     "build:all": "turbo run build",
     "lint": "turbo run lint",

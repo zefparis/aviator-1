@@ -1,2 +1,4 @@
-apps/web
-apps/mobile
+apps/web/**
+apps/mobile/**
+**/next.config.js
+**/.next/**
