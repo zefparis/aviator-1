@@ -9,8 +9,9 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "./build.sh",
-    "start": "cd apps/server && pnpm start",
+    "build": "turbo run build --filter=@aviator/web",
+    "build:server": "./build.sh",
+    "start": "cd apps/web && pnpm start",
     "build:all": "turbo run build",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",

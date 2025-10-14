@@ -1,0 +1,27 @@
+services:
+  # Backend WebSocket Server
+  - type: web
+    name: aviator-server
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "cd apps/server && pnpm start"
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_APP_URL
+        sync: false
+
+  # PostgreSQL Database
+  - type: pgsql
+    name: aviator-db
+    region: frankfurt
+    plan: free
+    databaseName: aviator
+    databaseUser: aviator
