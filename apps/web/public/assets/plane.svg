@@ -1,0 +1,22 @@
+<svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fuselage principal -->
+  <path d="M20 50 L75 45 L80 50 L75 55 L20 50 Z" fill="#E8F4F8" stroke="#0EA5E9" stroke-width="2"/>
+  
+  <!-- Cockpit -->
+  <ellipse cx="75" cy="50" rx="8" ry="6" fill="#38BDF8" stroke="#0EA5E9" stroke-width="1.5"/>
+  
+  <!-- Aile principale -->
+  <path d="M35 50 L30 30 L45 48 Z" fill="#0EA5E9" stroke="#0284C7" stroke-width="1.5"/>
+  <path d="M35 50 L30 70 L45 52 Z" fill="#0EA5E9" stroke="#0284C7" stroke-width="1.5"/>
+  
+  <!-- Aileron arrière -->
+  <path d="M22 50 L18 40 L25 48 Z" fill="#38BDF8" stroke="#0EA5E9" stroke-width="1.5"/>
+  
+  <!-- Détails et reflets -->
+  <path d="M65 48 L75 47" stroke="#FFFFFF" stroke-width="1" opacity="0.6"/>
+  <path d="M55 48.5 L70 47.5" stroke="#FFFFFF" stroke-width="1" opacity="0.4"/>
+  
+  <!-- Hélice (optionnelle, pour effet dynamique) -->
+  <circle cx="80" cy="50" r="2" fill="#0284C7"/>
+  <line x1="80" y1="45" x2="80" y2="55" stroke="#0284C7" stroke-width="1.5" opacity="0.3"/>
+</svg>

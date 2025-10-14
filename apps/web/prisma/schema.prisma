@@ -1,0 +1,90 @@
+// Prisma Schema for Aviator Game
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  username      String    @unique
+  email         String?   @unique
+  password      String
+  balance       Decimal   @default(1000.00) @db.Decimal(10, 2)
+  totalWinnings Decimal   @default(0) @db.Decimal(10, 2)
+  totalBets     Decimal   @default(0) @db.Decimal(10, 2)
+  winRate       Decimal   @default(0) @db.Decimal(5, 2)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  bets          Bet[]
+  sessions      Session[]
+
+  @@index([username])
+  @@index([email])
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model GameRound {
+  id         String   @id @default(cuid())
+  multiplier Decimal  @default(1.00) @db.Decimal(10, 2)
+  seed       String   @unique
+  status     RoundStatus @default(WAITING)
+  startTime  DateTime @default(now())
+  endTime    DateTime?
+  crashPoint Decimal  @db.Decimal(10, 2)
+  createdAt  DateTime @default(now())
+
+  bets Bet[]
+
+  @@index([status])
+  @@index([startTime])
+}
+
+model Bet {
+  id                String    @id @default(cuid())
+  userId            String
+  roundId           String
+  amount            Decimal   @db.Decimal(10, 2)
+  cashoutMultiplier Decimal?  @db.Decimal(10, 2)
+  cashoutTime       DateTime?
+  status            BetStatus @default(PENDING)
+  winAmount         Decimal   @default(0) @db.Decimal(10, 2)
+  createdAt         DateTime  @default(now())
+
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  round GameRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roundId])
+  @@index([userId])
+  @@index([roundId])
+  @@index([status])
+}
+
+enum RoundStatus {
+  WAITING
+  FLYING
+  CRASHED
+}
+
+enum BetStatus {
+  PENDING
+  WON
+  LOST
+  CASHED_OUT
+}

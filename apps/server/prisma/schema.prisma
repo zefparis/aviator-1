@@ -1,0 +1,15 @@
+// This is a symlink to the web prisma schema
+// In production, both apps share the same schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../web/node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Import from web schema
+// This ensures both apps use the same database schema

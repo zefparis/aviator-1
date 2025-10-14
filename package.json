@@ -1,0 +1,27 @@
+{
+  "name": "aviator-game-v2",
+  "version": "2.0.0",
+  "description": "Aviator Crash Game - Next.js 14 + Node.js + Socket.io",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "start": "turbo run start",
+    "lint": "turbo run lint",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "db:push": "cd apps/web && pnpm prisma db push",
+    "db:studio": "cd apps/web && pnpm prisma studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0"
+}
