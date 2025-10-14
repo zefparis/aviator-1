@@ -9,8 +9,9 @@
   ],
   "scripts": {
     "dev": "turbo run dev",
-    "build": "turbo run build",
-    "start": "turbo run start",
+    "build": "pnpm --filter @aviator/server prisma generate && pnpm --filter @aviator/server build",
+    "start": "cd apps/server && pnpm start",
+    "build:all": "turbo run build",
     "lint": "turbo run lint",
     "clean": "turbo run clean && rm -rf node_modules",
     "db:push": "cd apps/web && pnpm prisma db push",
