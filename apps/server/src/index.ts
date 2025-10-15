@@ -12,8 +12,27 @@ const app = express();
 const httpServer = createServer(app);
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://localhost:3000',
+  process.env.NEXT_PUBLIC_APP_URL,
+  /\.vercel\.app$/,  // Tous les domaines Vercel
+];
+
 app.use(cors({
-  origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // Autoriser les requêtes sans origin (comme curl, Postman)
+    if (!origin) return callback(null, true);
+    
+    // Vérifier si l'origin est autorisée
+    const isAllowed = allowedOrigins.some(allowed => {
+      if (typeof allowed === 'string') return origin === allowed;
+      if (allowed instanceof RegExp) return allowed.test(origin);
+      return false;
+    });
+    
+    callback(null, isAllowed);
+  },
   credentials: true,
 }));
 app.use(express.json());
@@ -21,7 +40,17 @@ app.use(express.json());
 // Socket.io setup
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      
+      const isAllowed = allowedOrigins.some(allowed => {
+        if (typeof allowed === 'string') return origin === allowed;
+        if (allowed instanceof RegExp) return allowed.test(origin);
+        return false;
+      });
+      
+      callback(null, isAllowed);
+    },
     credentials: true,
   },
   transports: ['websocket', 'polling'],
