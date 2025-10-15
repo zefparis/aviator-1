@@ -215,7 +215,7 @@ export class GameEngine {
     if (this.state.roundId) {
       await prisma.bet.create({
         data: {
-          userId: socketId, // In production, use real user ID
+          userId: null, // Anonymous bet
           roundId: this.state.roundId,
           amount: bet.amount,
           cashoutMultiplier: this.state.currentMultiplier,
@@ -252,7 +252,7 @@ export class GameEngine {
       if (this.state.roundId) {
         await prisma.bet.create({
           data: {
-            userId: socketId,
+            userId: null, // Anonymous bet
             roundId: this.state.roundId,
             amount: bet.amount,
             status: 'LOST',
