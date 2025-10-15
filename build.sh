@@ -13,13 +13,9 @@ fi
 echo "📦 Installing dependencies..."
 pnpm install --frozen-lockfile
 
-# Generate Prisma Client
-echo "📦 Generating Prisma Client..."
+# Build server (includes prisma generate)
+echo "⚙️  Building server..."
 cd apps/server
-pnpm prisma generate
-
-# Build TypeScript
-echo "⚙️  Compiling TypeScript..."
 pnpm run build
 
 echo "✅ Build complete!"
