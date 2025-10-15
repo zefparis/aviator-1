@@ -58,7 +58,7 @@ model GameRound {
 
 model Bet {
   id                String    @id @default(cuid())
-  userId            String
+  userId            String?
   roundId           String
   amount            Decimal   @db.Decimal(10, 2)
   cashoutMultiplier Decimal?  @db.Decimal(10, 2)
@@ -67,10 +67,9 @@ model Bet {
   winAmount         Decimal   @default(0) @db.Decimal(10, 2)
   createdAt         DateTime  @default(now())
 
-  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user  User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   round GameRound @relation(fields: [roundId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, roundId])
   @@index([userId])
   @@index([roundId])
   @@index([status])
