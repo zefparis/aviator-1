@@ -9,7 +9,10 @@ export const metadata: Metadata = {
   title: "Aviator Game - Congo Gaming",
   description: "Jeu de crash multiplayer en temps réel",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icon", type: "image/png", sizes: "32x32" },
+    ],
   },
 };
 
