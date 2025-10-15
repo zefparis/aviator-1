@@ -7,8 +7,8 @@ cmds = ["pnpm install --frozen-lockfile"]
 
 [phases.build]
 cmds = [
-  "pnpm --filter @aviator/server prisma generate",
-  "pnpm --filter @aviator/server build"
+  "cd apps/server && pnpm prisma generate",
+  "cd apps/server && pnpm run build"
 ]
 
 [start]
