@@ -52,8 +52,12 @@ const io = new Server(httpServer, {
       callback(null, isAllowed);
     },
     credentials: true,
+    methods: ['GET', 'POST'],
   },
   transports: ['websocket', 'polling'],
+  allowEIO3: true,
+  pingTimeout: 60000,
+  pingInterval: 25000,
 });
 
 // Initialize game engine (delayed to allow DB connection)
@@ -95,6 +99,16 @@ app.get('/ready', async (req, res) => {
       error: 'Database connection failed',
     });
   }
+});
+
+// Socket.io debug endpoint
+app.get('/socket-test', (req, res) => {
+  res.status(200).json({
+    socketio: 'ready',
+    activeConnections: io.engine.clientsCount,
+    transports: ['websocket', 'polling'],
+    cors: 'enabled',
+  });
 });
 
 // API Routes
